@@ -49,13 +49,14 @@ var compass = [{
 ];
 
 function Piece(valueArray) {
+    //Sides are indicated by index into array according to the enumeration 'f'
     this.faces = valueArray;
 
     this.getColor = function(face) {
         return this.faces[face];
     };
 
-    this.hasFace = function(face) {
+    this.hasColor = function(face) {
         return this.faces[face] != 0;
     };
 }
@@ -63,6 +64,7 @@ function Piece(valueArray) {
 function Cube(colors, data) {
     this.pieces = [];
 
+    //A reference to the color of each side's center
     this.colors = colors;
 
     this.cubeInit = function(data) {
@@ -107,8 +109,10 @@ function Cube(colors, data) {
         this.pieces.push(new Piece([0, 0, data[f.BACK][2][2], data[f.LEFT][2][0], 0, data[f.DOWN][0][0]]));
     };
 
+    //Hard codes the 20 pieces from the given arrays to become the appropriate Piece objects
     this.cubeInit(data);
 
+    //Retrieves a specific piece
     this.getPiece = function(face1, face2, face3) {
         if (face3 == undefined) {
             return this.getEdge(face1, face2);
@@ -117,17 +121,18 @@ function Cube(colors, data) {
         }
     };
 
+    //Uniquely identifies an edge piece by the two faces for which it has a color
     this.getEdge = function(face1, face2) {
         //For all pieces
         for(var piece = 0; piece < this.pieces.length; ++piece) {
             var isCorrectEdge = true;
             //Try every face queried
             for(var face = 0; face < 6; ++face) {
-                if((face == face1 || face == face2) && !this.pieces[piece].hasFace(face)) {
+                if((face == face1 || face == face2) && !this.pieces[piece].hasColor(face)) {
                     isCorrectEdge = false;
                     break;
                 }
-                else if(face != face1 && face != face2 && this.pieces[piece].hasFace(face)) {
+                else if(face != face1 && face != face2 && this.pieces[piece].hasColor(face)) {
                     isCorrectEdge = false;
                     break;
                 }
@@ -138,15 +143,16 @@ function Cube(colors, data) {
         }
     };
 
+    //Uniquely identifies a corner by the three faces for which it has a color
     this.getCorner = function(face1, face2, face3) {
         for(var piece = 0; piece < this.pieces.length; ++piece) {
             var isCorrectEdge = true;
             for(var face = 0; face < 6; ++face) {
-                if((face == face1 || face == face2 || face == face3) && !this.pieces[piece].hasFace(face)) {
+                if((face == face1 || face == face2 || face == face3) && !this.pieces[piece].hasColor(face)) {
                     isCorrectEdge = false;
                     break;
                 }
-                else if(face != face1 && face != face2 && face != face3 && this.pieces[piece].hasFace(face)) {
+                else if(face != face1 && face != face2 && face != face3 && this.pieces[piece].hasColor(face)) {
                     isCorrectEdge = false;
                     break;
                 }
@@ -157,6 +163,7 @@ function Cube(colors, data) {
         }
     };
 
+    //Gets our face indices from a render-ready face index
     var internalFromRender = function(renderFaceNumber) {
         if (renderFaceNumber == 0) {
             return f.FRONT;
@@ -178,6 +185,11 @@ function Cube(colors, data) {
         }
     };
 
+    //getFace takes in a face index in the renderer's order: Front, Back, Up, Down, Left, Right
+    //Cube unfolds as shown
+    //       U
+    // F R B L
+    //       D
     this.getFace = function(face) {
         face = internalFromRender(face);
         var zeroZero = this.getPiece(compass[face].toLeft, compass[face].above, face).getColor(face);
