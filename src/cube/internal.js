@@ -51,11 +51,7 @@ var compass = [{
 function Piece(valueArray) {
     this.faces = valueArray;
 
-    this.setFace = function(face, color) {
-        this.faces[face] = color;
-    };
-
-    this.getFace = function(face) {
+    this.getColor = function(face) {
         return this.faces[face];
     };
 
@@ -111,17 +107,21 @@ function Cube(colors, data) {
         this.pieces.push(new Piece([0, 0, data[f.BACK][2][2], data[f.LEFT][2][0], 0, data[f.DOWN][0][0]]));
     };
 
-    this.getPiece = function(face1, face2, face3 = null) {
-        if (face3 == null) {
-            return this.getEdge(face1, face2)
+    this.cubeInit(data);
+
+    this.getPiece = function(face1, face2, face3) {
+        if (face3 == undefined) {
+            return this.getEdge(face1, face2);
         } else {
-            return this.getCorner(face1, face2, face3)
+            return this.getCorner(face1, face2, face3);
         }
     };
 
     this.getEdge = function(face1, face2) {
+        //For all pieces
         for(var piece = 0; piece < this.pieces.length; ++piece) {
             var isCorrectEdge = true;
+            //Try every face queried
             for(var face = 0; face < 6; ++face) {
                 if((face == face1 || face == face2) && !this.pieces[piece].hasFace(face)) {
                     isCorrectEdge = false;
@@ -156,4 +156,20 @@ function Cube(colors, data) {
             }
         }
     };
+
+    this.getFace = function(face) {
+        var zeroZero = this.getPiece(compass[face].toLeft, compass[face].above, face).getColor(face);
+        var zeroOne = this.getPiece(compass[face].above, face).getColor(face);
+        var zeroTwo = this.getPiece(compass[face].toRight, compass[face].above, face).getColor(face);
+        var oneZero = this.getPiece(compass[face].toLeft, face).getColor(face);
+        var oneOne = this.colors[face];
+        var oneTwo = this.getPiece(compass[face].toRight, face).getColor(face);
+        var twoZero = this.getPiece(compass[face].toLeft, compass[face].below, face).getColor(face);
+        var twoOne = this.getPiece(compass[face].below, face).getColor(face);
+        var twoTwo = this.getPiece(compass[face].toRight, compass[face].below, face).getColor(face);
+
+        return [[zeroZero, zeroOne, zeroTwo],
+                [oneZero, oneOne, oneTwo],
+                [twoZero, twoOne, twoTwo]  ];
+    }
 }
