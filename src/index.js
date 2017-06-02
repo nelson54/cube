@@ -48,6 +48,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 view.addSamples(samples);
             }));
 
+        grid
+            .forEach(view => {
+                ctx.fillStyle = 'black';
+                ctx.strokeRect(view.x, view.y, view.x1, view.y1);
+            });
 
         isDone = true;
     }
