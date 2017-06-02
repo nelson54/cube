@@ -18,8 +18,8 @@ module.exports = class Grid {
         return this.boxes.map(func)
     }
 
-    each(func) {
-        this.boxes.forEach(apply(this, func))
+    forEach(func) {
+        this.boxes.forEach(func)
     }
 
     findSizeOfGridSquares() {
