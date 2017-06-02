@@ -27,6 +27,6 @@ module.exports = class View {
     }
 
     sampleY() {
-        return sample(this.x, this.x1);
+        return sample(this.y, this.y1);
     }
 }
