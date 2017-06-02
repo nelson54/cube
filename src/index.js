@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let size = 300;
     let sampleWidth = 5;
 
-    let grid = new Grid(size, size);
+    let grid = window.grid = new Grid(size, size);
 
     let canvas = document.getElementById('grid');
     let ctx = canvas.getContext('2d');
@@ -34,17 +34,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         let imageData = ctx.getImageData(0, 0, size, size).data;
 
-        let samples = grid
-            .map((view) => view.sampleN(n))
-            .reduce((all, samples) => {
-                return all.concat(samples);
-            }, []);
+        grid
+            .forEach((view=> {
+                let samples = view.sampleN(n).map((sample) => {
+                    getRgb(imageData, sample.x, sample.y);
+                    let rgb = getRgb(imageData, sample.x, sample.y);
 
-        for (let sample of samples) {
-            getRgb(imageData, sample.x, sample.y);
-            ctx.fillStyle = getRgb(imageData, sample.x, sample.y);
-            ctx.fillRect(sample.x, sample.y, sampleWidth, sampleWidth);
-        }
+                    ctx.fillStyle = MathUtils.rgbToHex(rgb.r, rgb.g, rgb.b);
+                    ctx.fillRect(sample.x, sample.y, sampleWidth, sampleWidth);
+                    return rgb;
+                });
+
+                view.addSamples(samples);
+            }));
+
+
         isDone = true;
     }
 
@@ -54,10 +58,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     function getRgb(data, x, y) {
         let base = normalize(x, y);
-        let r = data[base],
-            g = data[base+1],
-            b = data[base+2];
 
-        return MathUtils.rgbToHex(r, g, b);
+        return {r:data[base], g:data[base+1], b:data[base+2]};
     }
 });
