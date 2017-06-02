@@ -31,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let demo = document.getElementById('demo');
     let demoCtx = demo.getContext('2d');
 
+    let sides = []
+
     console.log('test');
 
     function displaySamples(n) {
@@ -77,4 +79,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         return {r:data[base], g:data[base+1], b:data[base+2]};
     }
+
+    let captureButton = document.getElementById('capture')
+    let startOverButton = document.getElementById('start-over')
+    captureButton.addEventListener('click', capture)
+    startOverButton.addEventListener('click', startOver)
+    updateSide()
+
+    function capture() {
+        sides.push(grid);
+        if (sides.length == 6) {
+            buildCube(sides);
+            startOver();
+        } else {
+            updateSide()
+        }
+    }
+
+    function startOver() {
+        sides = []
+        updateSide()
+    }
+
+    function buildCube(sides) {
+        console.log(sides);
+    }
+
+    function updateSide() {
+        captureButton.innerHTML = `Capture side ${sides.length + 1}`
+    }
+
 });
