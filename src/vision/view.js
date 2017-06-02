@@ -15,8 +15,13 @@ module.exports = class View {
         this.y1 = y1;
 
         this.samples = [];
+        this.reset()
+    }
+
+    reset() {
         this.avg = {r:0, g: 0, b:0};
         this.totals = {r:0, g: 0, b:0};
+        this.samples = [];
     }
 
     sampleN(n) {
@@ -30,6 +35,11 @@ module.exports = class View {
     }
 
     addSamples(samples) {
+        console.log(this.samples.length);
+        if(this.samples.length > (100 * 30)) {
+            this.reset();
+        }
+
         this.samples = this.samples.concat(samples);
 
         samples.forEach((sample)=> {
