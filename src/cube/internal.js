@@ -66,7 +66,7 @@ function Cube(colors, data) {
     this.colors = colors;
 
     this.cubeInit = function(data) {
-        this.pieces.push(new Piece([data[f.FRONT][0][0], 0, 0, data[f.LEFT][0][2], data[f.UP][2][2]], 0));
+        this.pieces.push(new Piece([data[f.FRONT][0][0], 0, 0, data[f.LEFT][0][2], data[f.UP][2][2], 0]));
 
         this.pieces.push(new Piece([data[f.FRONT][0][1], 0, 0, 0, data[f.UP][1][2], 0]));
 
@@ -204,23 +204,3 @@ function Cube(colors, data) {
         console.log(this.getFace(3));
     };
 }
-
-function makeHomogenousSide(value) {
-    var newSide = [];
-    for (var i = 0; i < 3; ++i) {
-        var newRow = [];
-        for (var j = 0; j < 3; ++j) {
-            newRow.push(value);
-        }
-        newSide.push(newRow);
-    }
-    return newSide;
-}
-
-var colors = [0, 1, 2, 3, 4, 5];
-var sides = [];
-for (var i = 0; i < 6; ++i) {
-    sides.push(makeHomogenousSide(i));
-}
-var cube = new Cube(colors, sides);
-cube.printCube();
