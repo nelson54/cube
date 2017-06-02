@@ -10,6 +10,7 @@ module.exports = class CubeFactory {
     }
 
     getCube () {
+        //Assumes that there are 6 sides right now
         var colors = [];
         for(var side = 0; side < this.sides.length; ++side) {
             colors.push(this.sides[side][1][1])
