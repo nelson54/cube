@@ -6,5 +6,26 @@
 </head>
 <body>
     <script type="text/javascript" src="internal.js"></script>
+    <script type="text/javascript" src="factory.js"></script>
+    <script type="text/javascript">
+        function makeHomogenousSide(value) {
+            var newSide = [];
+            for (var i = 0; i < 3; ++i) {
+                var newRow = [];
+                for (var j = 0; j < 3; ++j) {
+                    newRow.push(value);
+                }
+                newSide.push(newRow);
+            }
+            return newSide;
+        }
+        var cubeFactory = new CubeFactory();
+        for (var i = 1; i < 7; ++i) {
+            cubeFactory.addSide(makeHomogenousSide(i));
+        }
+        var cube = cubeFactory.getCube();
+        cube.printCube();
+
+    </script>
 </body>
 </html>
