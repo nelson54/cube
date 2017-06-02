@@ -16,44 +16,12 @@
 
 
         <script>
-            var model = {
-                "0": {
-                    "0": [ 5, 0, 5 ],
-                    "1": [ 3, 0, 1 ],
-                    "2": [ 3, 3, 2 ]
-                },
-                "1": {
-                    "0": [ 3, 0, 4 ],
-                    "1": [ 4, 1, 0 ],
-                    "2": [ 4, 0, 0 ]
-                },
-                "2": {
-                    "0": [ 1, 3, 0 ],
-                    "1": [ 4, 3, 5 ],
-                    "2": [ 3, 4, 0 ]
-                },
-                "3": {
-                    "0": [ 1, 1, 2 ],
-                    "1": [ 2, 4, 2 ],
-                    "2": [ 2, 1, 3 ]
-                },
-                "4": {
-                    "0": [ 5, 2, 1 ],
-                    "1": [ 3, 2, 5 ],
-                    "2": [ 2, 5, 1 ]
-                },
-                "5": {
-                    "0": [ 1, 5, 5 ],
-                    "1": [ 3, 5, 2 ],
-                    "2": [ 4, 4, 0 ]
-                }
-            };
-
+            const QUARTER_TURN = Math.PI / 2;
             var camera, scene, renderer;
             var mesh;
 
             init();
-            animate();
+            render();
 
             function init() {
                 renderer = new THREE.WebGLRenderer();
@@ -68,7 +36,7 @@
                 const numSides = 6;
                 const sideLength = 201;
                 const stickerLength = sideLength / 3;
-                const sideColors = ['red', 'orange', 'yellow', 'green', 'blue', 'white'];
+                const sideColors = ['red', 'orange', 'yellow', 'green', 'blue', 'white']
                 var getSideMaterial = function(sideIdx) {
                     var canvas = document.createElement('canvas');
                     canvas.setAttribute('width', sideLength);
@@ -80,7 +48,7 @@
                     let stickerChar = 'A';
                     for (let row = 0; row < 3; ++ row, yStart += stickerLength) {
                         for (let col = 0, xStart = 0; col < 3; ++ col, xStart += stickerLength) {
-                            context.fillStyle = sideColors[model[sideIdx][row][col]];
+                            context.fillStyle = sideColors[(sideIdx + stickerIdx) % sideColors.length ]
                             ++ stickerIdx;
                             context.fillRect(xStart, yStart, xStart + stickerLength, yStart + stickerLength)
                             context.strokeStyle = 'black';
@@ -90,7 +58,7 @@
                             stickerChar = String.fromCharCode(stickerChar.charCodeAt(0) + 1)
                         }
                     }
-                    let sideChar = String.fromCharCode('1'.charCodeAt(0) + sideIdx)
+                    let sideChar = String.fromCharCode('0'.charCodeAt(0) + sideIdx)
                     context.fillStyle = 'black'
                     context.fillText(sideChar, sideLength / 2, sideLength / 2)
                     var texture = new THREE.Texture(canvas);
@@ -121,7 +89,21 @@
                 scene.add( mesh );
 
                 window.addEventListener( 'resize', onWindowResize, false );
-
+                document.addEventListener('keydown', (e) => {
+                    let ctrl = e.getModifierState("Control");
+                    if (e.key == "Home") {
+                        resetCube()
+                    } else if (e.key == "x") {
+                        rotateX(ctrl);
+                    } else if (e.key == "y") {
+                        rotateY(ctrl);
+                    } else if (e.key == "z") {
+                        rotateZ(ctrl);
+                    } else if (e.key == "1") {
+                        showFace();
+                    }
+                    e.stopPropagation()
+                })
             }
 
             function onWindowResize() {
@@ -133,17 +115,67 @@
 
             }
 
-            function animate() {
+//            function animate() {
+//
+//                requestAnimationFrame( animate );
+//
+//                mesh.rotation.x += 0.005;
+//                mesh.rotation.y += 0.01;
+//
+//                renderer.render( scene, camera );
+//
+//            }
 
-                requestAnimationFrame( animate );
-
-                mesh.rotation.x += 0.005;
-                mesh.rotation.y += 0.01;
-
+            function render() {
                 renderer.render( scene, camera );
-
             }
 
+            function step(goal, current, rate) {
+                let dir = goal > current ? 1 : -1;
+                return Math.min(Math.abs(goal - current), rate) * dir;
+            }
+
+            function animateRotationTo(x, y, z, xRate = 0.02, yRate = 0.02, zRate = 0.02) {
+                function animate() {
+                    let xStep = step(x, mesh.rotation.x, xRate);
+                    let yStep = step(y, mesh.rotation.y, yRate);
+                    let zStep = step(z, mesh.rotation.z, zRate);
+                    if (xStep || yStep || zStep) {
+                        requestAnimationFrame(animate)
+                        mesh.rotation.x += xStep;
+                        mesh.rotation.y += yStep;
+                        mesh.rotation.z += zStep;
+                        render();
+                    } else {
+                        console.log(mesh.rotation.x, mesh.rotation.y, mesh.rotation.z)
+                    }
+                }
+                animate()
+            }
+
+            function resetCube() {
+                mesh.rotation.x = 0;
+                mesh.rotation.y = 0;
+                mesh.rotation.z = 0;
+
+                render()
+            }
+
+            function rotateX(sign) {
+                animateRotationTo(mesh.rotation.x + (sign ? -1 : 1) * QUARTER_TURN, mesh.rotation.y, mesh.rotation.z)
+            }
+
+            function rotateY(sign) {
+                animateRotationTo(mesh.rotation.x, mesh.rotation.y + (sign ? -1 : 1) * QUARTER_TURN, mesh.rotation.z)
+            }
+
+            function rotateZ(sign) {
+                animateRotationTo(mesh.rotation.x, mesh.rotation.y, mesh.rotation.z + (sign ? -1 : 1) * QUARTER_TURN)
+            }
+
+            function showFace() {
+                animateRotationTo(0,0,0);
+            }
         </script>
 
     </body>

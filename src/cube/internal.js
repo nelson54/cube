@@ -10,44 +10,43 @@ var f = {
     DOWN: 5
 };
 
-var compass = {
-    FRONT: {
+var compass = [{
         above: f.UP,
         below: f.DOWN,
         toLeft: f.LEFT,
         toRight: f.RIGHT
     },
-    RIGHT: {
+    {
         above: f.UP,
         below: f.DOWN,
         toLeft: f.FRONT,
         toRight: f.BACK
     },
-    BACK: {
+    {
         above: f.UP,
         below: f.DOWN,
         toLeft: f.RIGHT,
         toRight: f.LEFT
     },
-    LEFT: {
+    {
         above: f.UP,
         below: f.DOWN,
         toLeft: f.BACK,
         toRight: f.FRONT
     },
-    UP: {
+    {
         above: f.RIGHT,
         below: f.LEFT,
         toLeft: f.BACK,
         toRight: f.FRONT
     },
-    DOWN: {
+    {
         above: f.LEFT,
         below: f.RIGHT,
         toLeft: f.BACK,
         toRight: f.FRONT
     }
-};
+];
 
 function Piece(valueArray) {
     this.faces = valueArray;
@@ -110,5 +109,51 @@ function Cube(colors, data) {
         this.pieces.push(new Piece([0, 0, data[f.BACK][2][1], 0, 0, data[f.DOWN][1][0]]));
 
         this.pieces.push(new Piece([0, 0, data[f.BACK][2][2], data[f.LEFT][2][0], 0, data[f.DOWN][0][0]]));
-    }
+    };
+
+    this.getPiece = function(face1, face2, face3 = null) {
+        if (face3 == null) {
+            return this.getEdge(face1, face2)
+        } else {
+            return this.getCorner(face1, face2, face3)
+        }
+    };
+
+    this.getEdge = function(face1, face2) {
+        for(var piece = 0; piece < this.pieces.length; ++piece) {
+            var isCorrectEdge = true;
+            for(var face = 0; face < 6; ++face) {
+                if((face == face1 || face == face2) && !this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+                else if(face != face1 && face != face2 && this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+            }
+            if(isCorrectEdge) {
+                return this.pieces[piece];
+            }
+        }
+    };
+
+    this.getCorner = function(face1, face2, face3) {
+        for(var piece = 0; piece < this.pieces.length; ++piece) {
+            var isCorrectEdge = true;
+            for(var face = 0; face < 6; ++face) {
+                if((face == face1 || face == face2 || face == face3) && !this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+                else if(face != face1 && face != face2 && face != face3 && this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+            }
+            if(isCorrectEdge) {
+                return this.pieces[piece];
+            }
+        }
+    };
 }
