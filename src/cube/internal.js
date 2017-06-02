@@ -10,44 +10,43 @@ var f = {
     DOWN: 5
 };
 
-var compass = {
-    FRONT: {
+var compass = [{
         above: f.UP,
         below: f.DOWN,
         toLeft: f.LEFT,
         toRight: f.RIGHT
     },
-    RIGHT: {
+    {
         above: f.UP,
         below: f.DOWN,
         toLeft: f.FRONT,
         toRight: f.BACK
     },
-    BACK: {
+    {
         above: f.UP,
         below: f.DOWN,
         toLeft: f.RIGHT,
         toRight: f.LEFT
     },
-    LEFT: {
+    {
         above: f.UP,
         below: f.DOWN,
         toLeft: f.BACK,
         toRight: f.FRONT
     },
-    UP: {
+    {
         above: f.RIGHT,
         below: f.LEFT,
         toLeft: f.BACK,
         toRight: f.FRONT
     },
-    DOWN: {
+    {
         above: f.LEFT,
         below: f.RIGHT,
         toLeft: f.BACK,
         toRight: f.FRONT
     }
-};
+];
 
 function Piece(valueArray) {
     this.faces = valueArray;
