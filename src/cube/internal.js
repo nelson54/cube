@@ -26,8 +26,10 @@ function Piece(valueArray) {
     };
 }
 
-function Cube() {
+function Cube(colors) {
     this.pieces = [];
+
+    this.colors = colors;
 
     this.cubeInit = function(data) {
         this.pieces.push(new Piece([data[f.FRONT][0][0], 0, 0, data[f.LEFT][0][2], data[f.UP][2][2]], 0));
