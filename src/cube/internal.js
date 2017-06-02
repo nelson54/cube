@@ -26,7 +26,7 @@ function Piece(valueArray) {
     };
 }
 
-function Cube(colors) {
+function Cube(colors, data) {
     this.pieces = [];
 
     this.colors = colors;
