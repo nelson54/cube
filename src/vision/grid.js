@@ -15,7 +15,7 @@ module.exports = class Grid {
     }
 
     map(func) {
-        return this.boxes.map(apply(this, func))
+        return this.boxes.map(func)
     }
 
     each(func) {

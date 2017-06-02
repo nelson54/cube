@@ -18,15 +18,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     (function displaySamples(n) {
 
 
-        /*grid
+        let samples = grid
             .map((view) => view.sampleN(n))
-            .reduce((samples, all) => {
+            .reduce((all, samples) => {
                 return all.concat(samples);
             }, []);
 
         for (let sample of samples) {
             ctx.fillStyle = 'green';
             ctx.fillRect(sample.x, sample.y, sampleSize, sampleSize);
-        }*/
+        }
     })(100)
 });

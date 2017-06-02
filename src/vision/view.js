@@ -1,5 +1,7 @@
+const MathUtils = require('./math-utils');
+
 function sample(min, max) {
-    MathUtils.randomBetween(min, max)
+    return MathUtils.randomBetween(min, max)
 }
 
 module.exports = class View {
@@ -21,10 +23,10 @@ module.exports = class View {
     }
 
     sampleX() {
-        sample(this.x, this.x1);
+        return sample(this.x, this.x1);
     }
 
     sampleY() {
-        sample(this.x, this.x1);
+        return sample(this.x, this.x1);
     }
 }
