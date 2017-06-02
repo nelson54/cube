@@ -157,7 +157,29 @@ function Cube(colors, data) {
         }
     };
 
+    var internalFromRender = function(renderFaceNumber) {
+        if (renderFaceNumber == 0) {
+            return f.FRONT;
+        }
+        else if (renderFaceNumber == 1) {
+            return f.BACK;
+        }
+        else if (renderFaceNumber == 2) {
+            return f.UP;
+        }
+        else if (renderFaceNumber == 3) {
+            return f.DOWN;
+        }
+        else if (renderFaceNumber == 4) {
+            return f.LEFT;
+        }
+        else if (renderFaceNumber == 5) {
+            return f.RIGHT;
+        }
+    };
+
     this.getFace = function(face) {
+        face = internalFromRender(face);
         var zeroZero = this.getPiece(compass[face].toLeft, compass[face].above, face).getColor(face);
         var zeroOne = this.getPiece(compass[face].above, face).getColor(face);
         var zeroTwo = this.getPiece(compass[face].toRight, compass[face].above, face).getColor(face);
@@ -171,5 +193,34 @@ function Cube(colors, data) {
         return [[zeroZero, zeroOne, zeroTwo],
                 [oneZero, oneOne, oneTwo],
                 [twoZero, twoOne, twoTwo]  ];
-    }
+    };
+
+    this.printCube = function() {
+        console.log(this.getFace(0));
+        console.log(this.getFace(5));
+        console.log(this.getFace(1));
+        console.log(this.getFace(4));
+        console.log(this.getFace(2));
+        console.log(this.getFace(3));
+    };
 }
+
+function makeHomogenousSide(value) {
+    var newSide = [];
+    for (var i = 0; i < 3; ++i) {
+        var newRow = [];
+        for (var j = 0; j < 3; ++j) {
+            newRow.push(value);
+        }
+        newSide.push(newRow);
+    }
+    return newSide;
+}
+
+var colors = [0, 1, 2, 3, 4, 5];
+var sides = [];
+for (var i = 0; i < 6; ++i) {
+    sides.push(makeHomogenousSide(i));
+}
+var cube = new Cube(colors, sides);
+cube.printCube();
