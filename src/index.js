@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let canvas = document.getElementById('grid');
     let ctx = canvas.getContext('2d');
 
+    let demo = document.getElementById('demo');
+    let demoCtx = demo.getContext('2d');
+
     console.log('test');
 
     function displaySamples(n) {
@@ -54,6 +57,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 ctx.strokeRect(view.x, view.y, view.x1, view.y1);
             });
 
+        grid
+            .forEach(view => {
+                demoCtx.fillStyle = MathUtils.rgbToHex(view.avg.r, view.avg.g, view.avg.b);
+                demoCtx.fillRect(view.x, view.y, view.x1, view.y1);
+
+                demoCtx.fillStyle = 'black';
+                demoCtx.strokeRect(view.x, view.y, view.x1, view.y1);
+            })
         isDone = true;
     }
 

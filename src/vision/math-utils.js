@@ -4,7 +4,7 @@ module.exports = class MathUtils {
     }
 
     static numberToHex(number) {
-        var hex = number.toString(16);
+        var hex = Math.floor(number).toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     }
 
