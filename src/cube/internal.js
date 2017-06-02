@@ -71,5 +71,51 @@ function Cube(colors, data) {
         this.pieces.push(new Piece([0, 0, data[f.BACK][2][1], 0, 0, data[f.DOWN][1][0]]));
 
         this.pieces.push(new Piece([0, 0, data[f.BACK][2][2], data[f.LEFT][2][0], 0, data[f.DOWN][0][0]]));
-    }
+    };
+
+    this.getPiece = function(face1, face2, face3 = null) {
+        if (face3 == null) {
+            return this.getEdge(face1, face2)
+        } else {
+            return this.getCorner(face1, face2, face3)
+        }
+    };
+
+    this.getEdge = function(face1, face2) {
+        for(var piece = 0; piece < this.pieces.length; ++piece) {
+            var isCorrectEdge = true;
+            for(var face = 0; face < 6; ++face) {
+                if((face == face1 || face == face2) && !this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+                else if(face != face1 && face != face2 && this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+            }
+            if(isCorrectEdge) {
+                return this.pieces[piece];
+            }
+        }
+    };
+
+    this.getCorner = function(face1, face2, face3) {
+        for(var piece = 0; piece < this.pieces.length; ++piece) {
+            var isCorrectEdge = true;
+            for(var face = 0; face < 6; ++face) {
+                if((face == face1 || face == face2 || face == face3) && !this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+                else if(face != face1 && face != face2 && face != face3 && this.pieces[piece].hasFace(face)) {
+                    isCorrectEdge = false;
+                    break;
+                }
+            }
+            if(isCorrectEdge) {
+                return this.pieces[piece];
+            }
+        }
+    };
 }
